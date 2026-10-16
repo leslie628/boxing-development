@@ -3,6 +3,8 @@ import { AppLayout } from "./components/layout/AppLayout";
 import Dashboard from "./features/dashboard/dashboard";
 import { dashboardStatItems } from "./data/dashboardStatItems";
 import { Route, Routes } from "react-router-dom";
+import TrainingPage from "./features/training/trainingpage";
+import Skills from "./features/skills/Skills";
 function PlaceholderPage({ title }: { title: string }) {
   return (
     <main className="p-6 lg:p-10">
@@ -21,7 +23,7 @@ function App() {
         />
         <Route
           path="/skills"
-          element={<PlaceholderPage title="Skills Library" />}
+          element={<Skills />}
         />
         <Route
           path="/combinations"
@@ -29,7 +31,7 @@ function App() {
         />
         <Route
           path="/training"
-          element={<PlaceholderPage title="Training Log" />}
+          element={<TrainingPage />}
         />
         <Route
           path="/development"
