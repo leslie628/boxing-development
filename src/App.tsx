@@ -5,6 +5,7 @@ import { dashboardStatItems } from "./data/dashboardStatItems";
 import { Route, Routes } from "react-router-dom";
 import TrainingPage from "./features/training/trainingpage";
 import Skills from "./features/skills/Skills";
+import Combinations from "./features/combinations/Combinations";
 function PlaceholderPage({ title }: { title: string }) {
   return (
     <main className="p-6 lg:p-10">
@@ -27,7 +28,7 @@ function App() {
         />
         <Route
           path="/combinations"
-          element={<PlaceholderPage title="Combination Builder" />}
+          element={<Combinations />}
         />
         <Route
           path="/training"
