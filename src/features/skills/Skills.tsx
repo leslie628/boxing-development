@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import type { Skill } from "../../types/skill";
 import { useSkills } from "../../hooks/useSkills";
 const Skills = () => {

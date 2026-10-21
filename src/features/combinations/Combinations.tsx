@@ -1,11 +1,9 @@
 import { useState } from "react";
-import type { Combination } from "../../types/combination";
 import { skills } from "../../data/skills";
 import { useCombinations } from "../../hooks/useCombinations";
 const Combinations = () => {
   const [name, setName] = useState("");
   const [selectedSkillIds, setSelectedSkillIds] = useState<string[]>([]);
-  const [combinations, setCombinations] = useState<Combination[]>([]);
   const {
     combinations: combinationData,
     createCombination,

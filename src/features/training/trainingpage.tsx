@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import type { TrainingFormData } from "./TrainingFormData";
 import type {
-  CreateTrainingSessionRequest,
-  Training,
+  CreateTrainingSessionRequest
 } from "../../types/Training";
 import { useSkills } from "../../hooks/useSkills";
 import { useCombinations } from "../../hooks/useCombinations";
@@ -31,7 +30,7 @@ const TrainingPage = () => {
     trainingSessions,
     loading: trainingLoading,
   } = useTraining();
-  const loading = skillsLoading || combinationsLoading || trainingLoading;
+  
   const error = skillsError || combinationsError;
   const toggleSelection = (
     field: "skillsPractised" | "combinationsPractised",
