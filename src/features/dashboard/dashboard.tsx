@@ -4,9 +4,7 @@ import { quickActions } from "../../data/quickActions";
 import { useCombinations } from "../../hooks/useCombinations";
 import { useSkills } from "../../hooks/useSkills";
 import { useTraining } from "../../hooks/useTraining";
-import type { DashboardStat } from "../../types/DashboardStat";
-
-const dasboard = ({ dashboardStats }: { dashboardStats: DashboardStat[] }) => {
+const dasboard = () => {
   const { skills, loading: skillsLoading } = useSkills();
 
   const { combinations, loading: combinationsLoading } = useCombinations();
@@ -37,7 +35,7 @@ const dasboard = ({ dashboardStats }: { dashboardStats: DashboardStat[] }) => {
     return `${hours} hr ${remainingMinutes} min`;
   };
   const loading = skillsLoading || combinationsLoading || trainingLoading;
-  const recentSessions = trainingSessions.slice(0, 3);
+  //const recentSessions = trainingSessions.slice(0, 3);
   return (
     <main className="mx-auto max-w-screen-2xl space-y-8 p-6 lg:p-10">
       <section>
