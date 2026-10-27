@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { skills } from "../../data/skills";
 import { useCombinations } from "../../hooks/useCombinations";
+import { useSkills } from "../../hooks/useSkills";
 const Combinations = () => {
   const [name, setName] = useState("");
   const [selectedSkillIds, setSelectedSkillIds] = useState<string[]>([]);
@@ -9,6 +9,7 @@ const Combinations = () => {
     createCombination,
     loading: combinationLoading,
   } = useCombinations();
+  const {skills} =useSkills();
 
   const addSkill = (skillId: string) => {
     setSelectedSkillIds((current) => [...current, skillId]);
