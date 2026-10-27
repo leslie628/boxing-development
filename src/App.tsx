@@ -1,6 +1,6 @@
 import "./App.css";
 import { AppLayout } from "./components/layout/AppLayout";
-import Dashboard from "./features/dashboard/dashboard";
+import Dashboard from "./features/dashboard/Dashboard";
 import { Route, Routes } from "react-router-dom";
 import TrainingPage from "./features/training/trainingpage";
 import Skills from "./features/skills/Skills";

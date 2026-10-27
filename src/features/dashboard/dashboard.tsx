@@ -4,7 +4,8 @@ import { quickActions } from "../../data/quickActions";
 import { useCombinations } from "../../hooks/useCombinations";
 import { useSkills } from "../../hooks/useSkills";
 import { useTraining } from "../../hooks/useTraining";
-const dasboard = () => {
+import { LoaderCircle } from "lucide-react";
+const Dashboard = () => {
   const { skills, loading: skillsLoading } = useSkills();
 
   const { combinations, loading: combinationsLoading } = useCombinations();
@@ -52,25 +53,25 @@ const dasboard = () => {
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
           label="Practice time"
-          value={loading ? "—" : formatPracticeTime(stats.practiceMinutes)}
+          value={loading ? ( <LoaderCircle className="h-5 w-5 animate-spin text-red-400" />) : (formatPracticeTime(stats.practiceMinutes))}
           note="Minutes logged"
         />
 
         <StatCard
           label="Available skills"
-          value={loading ? "—" : String(stats.totalSkills)}
+          value={loading ? ( <LoaderCircle className="h-5 w-5 animate-spin text-red-400" />) : String(stats.totalSkills)}
           note="Available skills"
         />
 
         <StatCard
           label="Available combinations"
-          value={loading ? "—" : String(stats.totalCombinations)}
+          value={loading ? ( <LoaderCircle className="h-5 w-5 animate-spin text-red-400" />) : String(stats.totalCombinations)}
           note="Created combinations"
         />
 
         <StatCard
           label="Recent sessions"
-          value={loading ? "—" : String(stats.totalSessions)}
+          value={loading ? (<LoaderCircle className="h-5 w-5 animate-spin text-red-400" />) : String(stats.totalSessions)}
           note="Sessions recorded"
         />
       </section>
@@ -120,4 +121,4 @@ const dasboard = () => {
     </main>
   );
 };
-export default dasboard;
+export default Dashboard;
