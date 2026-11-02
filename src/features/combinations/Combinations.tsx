@@ -9,7 +9,7 @@ const Combinations = () => {
     createCombination,
     loading: combinationLoading,
   } = useCombinations();
-  const {skills} =useSkills();
+  const { skills } = useSkills();
 
   const addSkill = (skillId: string) => {
     setSelectedSkillIds((current) => [...current, skillId]);
@@ -22,7 +22,10 @@ const Combinations = () => {
       return;
     }
     try {
-      await createCombination({ name: name.trim(), skillIds: [...selectedSkillIds] });
+      await createCombination({
+        name: name.trim(),
+        skillIds: [...selectedSkillIds],
+      });
       setName("");
       setSelectedSkillIds([]);
     } catch (error) {
@@ -135,8 +138,24 @@ const Combinations = () => {
                 key={combination.id}
                 className="rounded-xl border border-slate-800 bg-slate-900 p-5"
               >
-                <h3 className="font-semibold text-white">{combination.name}</h3>
-
+                <div className="flex flex-wrap items-center gap-2">
+                  <h3 className="font-semibold text-white">
+                    {combination.name}
+                  </h3>
+                  {combination.status && (
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                        combination.status === "natural"
+                          ? "bg-green-500/15 text-green-400"
+                          : "bg-orange-500/15 text-orange-400"
+                      }`}
+                    >
+                      {combination.status === "natural"
+                        ? "Natural"
+                        : "Needs work"}
+                    </span>
+                  )}
+                </div>
                 <p className="mt-2 text-sm text-slate-400">
                   {combination.skillIds
                     .map(

@@ -1,4 +1,4 @@
-import {  useState } from "react";
+import { useState } from "react";
 import type { Skill } from "../../types/skill";
 import { useSkills } from "../../hooks/useSkills";
 const Skills = () => {
@@ -72,7 +72,25 @@ const Skills = () => {
                       className="flex items-center gap-4 py-4"
                     >
                       <div className="min-w-0 flex-1">
-                        <h3 className="font-medium text-white">{skill.name}</h3>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <h3 className="font-medium text-white">
+                            {skill.name}
+                          </h3>
+                          {skill.status && (
+                            <span
+                              className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                                skill.status === "natural"
+                                  ? "bg-green-500/15 text-green-400"
+                                  : "bg-orange-500/15 text-orange-400"
+                              }`}
+                            >
+                              {skill.status === "natural"
+                                ? "Natural"
+                                : "Needs work"}
+                            </span>
+                          )}
+                        </div>
+
                         <p className="mt-1 text-sm text-slate-400">
                           {skill.description}
                         </p>
