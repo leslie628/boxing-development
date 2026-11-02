@@ -1,3 +1,4 @@
+type AssessmentStatus = "natural" | "needs-work";
 export type Training = {
   id: string;
   date: string;
@@ -13,6 +14,15 @@ export interface CreateTrainingSessionRequest {
   skillIds: string[];
   combinationIds: string[];
   notes: string;
+  skillAssessments?: {
+    id: string;
+    status: AssessmentStatus;
+  }[];
+
+  combinationAssessments?: {
+    id: string;
+    status: AssessmentStatus;
+  }[];
 }
 
 export interface ApiTrainingSession {

@@ -1,13 +1,12 @@
-import {  useState } from "react";
+import { useState } from "react";
 import type { TrainingFormData } from "./TrainingFormData";
-import type {
-  CreateTrainingSessionRequest
-} from "../../types/Training";
+import type { CreateTrainingSessionRequest } from "../../types/Training";
 import { useSkills } from "../../hooks/useSkills";
 import { useCombinations } from "../../hooks/useCombinations";
 import { useTraining } from "../../hooks/useTraining";
+import AssessmentRadio from "../../components/ui/AssessmentRadio";
 //import {skills} from "../../data/skills";
-
+type AssessmentStatus = "natural" | "needs-work";
 const initialFormData: TrainingFormData = {
   date: new Date().toISOString().slice(0, 10),
   durationMinutes: "30",
@@ -19,6 +18,15 @@ const TrainingPage = () => {
   const [formData, setFormData] = useState<TrainingFormData>({
     ...initialFormData,
   });
+
+  const [skillAssessments, setSkillAssessments] = useState<
+    Record<string, AssessmentStatus | null>
+  >({});
+
+  const [combinationAssessments, setCombinationAssessments] = useState<
+    Record<string, AssessmentStatus | null>
+  >({});
+
   const { skills, loading: skillsLoading, error: skillsError } = useSkills();
   const {
     combinations,
@@ -30,7 +38,7 @@ const TrainingPage = () => {
     trainingSessions,
     loading: trainingLoading,
   } = useTraining();
-  
+
   const error = skillsError || combinationsError;
   const toggleSelection = (
     field: "skillsPractised" | "combinationsPractised",
@@ -51,6 +59,18 @@ const TrainingPage = () => {
       skillIds: [...formData.skillsPractised],
       combinationIds: [...formData.combinationsPractised],
       notes: formData.notes.trim(),
+      skillAssessments: Object.entries(skillAssessments)
+        .filter(([, status]) => status !== null)
+        .map(([id, status]) => ({
+          id,
+          status: status!,
+        })),
+      combinationAssessments: Object.entries(combinationAssessments)
+        .filter(([, status]) => status !== null)
+        .map(([id, status]) => ({
+          id,
+          status: status!,
+        })),
     };
     createTrainingSession(newSession);
     clearForm();
@@ -209,7 +229,76 @@ const TrainingPage = () => {
               )}
             </div>
           </fieldset>
+          {formData.skillsPractised.length > 0 && (
+            <div className="mt-6">
+              <h3 className="mb-3 text-sm font-semibold text-slate-200">
+                Optional skill assessment
+              </h3>
 
+              <div className="max-h-64 space-y-3 overflow-y-auto pr-2">
+                {skills
+                  .filter((skill) =>
+                    formData.skillsPractised.includes(skill.id),
+                  )
+                  .map((skill) => (
+                    <div
+                      key={skill.id}
+                      className="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-slate-800 p-3"
+                    >
+                      <span className="text-sm text-slate-300">
+                        {skill.name}
+                      </span>
+
+                      <AssessmentRadio
+                        name={`skill-${skill.id}`}
+                        value={skillAssessments[skill.id] ?? null}
+                        onChange={(status) =>
+                          setSkillAssessments((prev) => ({
+                            ...prev,
+                            [skill.id]: status,
+                          }))
+                        }
+                      />
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
+          {formData.combinationsPractised.length > 0 && (
+            <div className="mt-6">
+              <h3 className="mb-3 text-sm font-semibold text-slate-200">
+                Optional combination assessment
+              </h3>
+
+              <div className="smax-h-64 space-y-3 overflow-y-auto pr-2">
+                {combinations
+                  .filter((combination) =>
+                    formData.combinationsPractised.includes(combination.id),
+                  )
+                  .map((combination) => (
+                    <div
+                      key={combination.id}
+                      className="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-slate-800 p-3"
+                    >
+                      <span className="text-sm text-slate-300">
+                        {combination.name}
+                      </span>
+
+                      <AssessmentRadio
+                        name={`combination-${combination.id}`}
+                        value={combinationAssessments[combination.id] ?? null}
+                        onChange={(status) =>
+                          setCombinationAssessments((prev) => ({
+                            ...prev,
+                            [combination.id]: status,
+                          }))
+                        }
+                      />
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
           <div>
             <label
               htmlFor="notes"
@@ -291,7 +380,6 @@ const TrainingPage = () => {
                           .join(" -> ") ?? id,
                     )}
                   </p>
-
                   {session.notes && (
                     <p className="mt-3 text-sm text-slate-400">
                       {session.notes}

@@ -10,3 +10,23 @@ export const getSkills = async (): Promise<Skill[]> => {
 
   return response.json() as Promise<Skill[]>
 }
+
+export async function updateSkillStatus(
+  id: string,
+  status: 'natural' | 'needs-work' | null,
+): Promise<Skill> {
+  const response = await fetch(
+    `${API_URL}/api/skills/${encodeURIComponent(id)}/status`,
+    {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status }),
+    },
+  )
+
+  if (!response.ok) {
+    throw new Error('Failed to update skill status')
+  }
+
+  return response.json()
+}

@@ -30,3 +30,18 @@ export const createCombination = async (data: CreateCombinationRequest): Promise
 
   return response.json() as Promise<Combination>
 }
+
+export const updateCombinationStatus = async (combinationId: string, status: 'natural' | 'needs-work'): Promise<Combination> => {
+  const response = await fetch(`${API_URL}/api/combinations/${encodeURIComponent(combinationId)}/status`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ status }),
+  })
+  if(!response.ok) {
+    const errorData = await response.json().catch(() => null)
+    throw new Error(errorData?.message ?? 'Failed to update combination status.')
+  }
+  return response.json() as Promise<Combination>
+}

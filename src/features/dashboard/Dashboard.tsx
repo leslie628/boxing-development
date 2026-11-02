@@ -1,14 +1,17 @@
 import { useMemo } from "react";
 import { StatCard } from "../../components/ui/StatCard";
-import { quickActions } from "../../data/quickActions";
+import { TrainingActivityChart } from "./TrainingActivityChart";
 import { useCombinations } from "../../hooks/useCombinations";
 import { useSkills } from "../../hooks/useSkills";
 import { useTraining } from "../../hooks/useTraining";
 import { LoaderCircle } from "lucide-react";
+import { useDevelopmentOverview } from "../../hooks/useDevelopment";
 const Dashboard = () => {
   const { skills, loading: skillsLoading } = useSkills();
 
   const { combinations, loading: combinationsLoading } = useCombinations();
+
+  const { overview } = useDevelopmentOverview(skills, combinations);
 
   const { trainingSessions, loading: trainingLoading } = useTraining();
 
@@ -53,25 +56,49 @@ const Dashboard = () => {
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
           label="Practice time"
-          value={loading ? ( <LoaderCircle className="h-5 w-5 animate-spin text-red-400" />) : (formatPracticeTime(stats.practiceMinutes))}
+          value={
+            loading ? (
+              <LoaderCircle className="h-5 w-5 animate-spin text-red-400" />
+            ) : (
+              formatPracticeTime(stats.practiceMinutes)
+            )
+          }
           note="Minutes logged"
         />
 
         <StatCard
           label="Available skills"
-          value={loading ? ( <LoaderCircle className="h-5 w-5 animate-spin text-red-400" />) : String(stats.totalSkills)}
+          value={
+            loading ? (
+              <LoaderCircle className="h-5 w-5 animate-spin text-red-400" />
+            ) : (
+              String(stats.totalSkills)
+            )
+          }
           note="Available skills"
         />
 
         <StatCard
           label="Available combinations"
-          value={loading ? ( <LoaderCircle className="h-5 w-5 animate-spin text-red-400" />) : String(stats.totalCombinations)}
+          value={
+            loading ? (
+              <LoaderCircle className="h-5 w-5 animate-spin text-red-400" />
+            ) : (
+              String(stats.totalCombinations)
+            )
+          }
           note="Created combinations"
         />
 
         <StatCard
           label="Recent sessions"
-          value={loading ? (<LoaderCircle className="h-5 w-5 animate-spin text-red-400" />) : String(stats.totalSessions)}
+          value={
+            loading ? (
+              <LoaderCircle className="h-5 w-5 animate-spin text-red-400" />
+            ) : (
+              String(stats.totalSessions)
+            )
+          }
           note="Sessions recorded"
         />
       </section>
@@ -80,42 +107,53 @@ const Dashboard = () => {
         <div className="rounded-xl border border-slate-800 bg-slate-900 p-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h3 className="text-lg font-semibold">Development path</h3>
+              <h3 className="text-lg font-semibold">Development Overview</h3>
               <p className="mt-1 text-sm text-slate-400">
-                Your next steps will be based on your training history.
+                Track your natural skills and areas that need improvement.
               </p>
             </div>
             <span className="rounded-full bg-slate-800 px-3 py-1 text-xs text-slate-300">
-              Not started
+              Getting started
             </span>
           </div>
-          <div className="mt-8 rounded-lg border border-dashed border-slate-700 p-8 text-center">
-            <p className="font-medium">Your development plan starts here</p>
-            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-400">
-              Once you record practice, we can identify areas to explore and
-              suggest logical progressions.
+
+          <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="rounded-lg bg-slate-800/60 p-4">
+              <p className="text-2xl font-bold text-green-400">{overview.naturalSkills}</p>
+              <p className="mt-1 text-sm text-slate-300">Natural skills</p>
+            </div>
+
+            <div className="rounded-lg bg-slate-800/60 p-4">
+              <p className="text-2xl font-bold text-amber-400">{overview.skillsToImprove}</p>
+              <p className="mt-1 text-sm text-slate-300">Skills to improve</p>
+            </div>
+
+            <div className="rounded-lg bg-slate-800/60 p-4">
+              <p className="text-2xl font-bold text-green-400">{overview.naturalCombinations}</p>
+              <p className="mt-1 text-sm text-slate-300">
+                Natural combinations
+              </p>
+            </div>
+
+            <div className="rounded-lg bg-slate-800/60 p-4">
+              <p className="text-2xl font-bold text-amber-400">{overview.combinationsToImprove}</p>
+              <p className="mt-1 text-sm text-slate-300">
+                Combinations to improve
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-6 border-t border-slate-800 pt-5">
+            <h4 className="font-semibold">Development Plan</h4>
+            <p className="mt-2 text-sm leading-6 text-slate-400">
+              Your recommended next steps will appear here as you record
+              training sessions and assess your skills and combinations.
             </p>
           </div>
         </div>
 
         <div className="rounded-xl border border-slate-800 bg-slate-900 p-6">
-          <h3 className="text-lg font-semibold">Quick actions</h3>
-          <p className="mt-1 text-sm text-slate-400">
-            Keep your training moving.
-          </p>
-
-          <div className="mt-6 space-y-3">
-            {quickActions.map(({ icon, label }) => (
-              <button
-                key={label}
-                type="button"
-                className="flex w-full items-center gap-3 rounded-lg border border-slate-800 px-4 py-3 text-left text-sm text-slate-300 transition hover:border-orange-500/50 hover:bg-slate-800"
-              >
-                <span className="text-orange-400">{icon}</span>
-                {label}
-              </button>
-            ))}
-          </div>
+          <TrainingActivityChart trainingData={trainingSessions} />
         </div>
       </section>
     </main>
