@@ -1,10 +1,14 @@
-type AssessmentStatus = "natural" | "needs-work";
+import type { AssessmentStatus } from "./assessmentStatus";
+
 export type Training = {
   id: string;
   date: string;
   duration: number;
   skills: string[];
-  combinations: string[];
+  combinations: {
+    id: number;
+    status: AssessmentStatus;
+  }[];
   notes: string;
   createdAt: string;
 };
@@ -31,6 +35,10 @@ export interface ApiTrainingSession {
   durationMinutes: number;
   skillIds: string[];
   combinationIds: string[];
+  combinations: {
+    id: number;
+    status: AssessmentStatus;
+  }[];
   notes: string;
   createdAt: string;
 }

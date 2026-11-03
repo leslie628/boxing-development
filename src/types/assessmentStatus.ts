@@ -1,0 +1,1 @@
+export type AssessmentStatus = "natural" | "needs-work" | null | undefined;

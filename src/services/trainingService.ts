@@ -17,7 +17,7 @@ export const getTrainingSessions = async (): Promise<Training[]> => {
     date: session.date,
     duration: session.durationMinutes,
     skills: session.skillIds,
-    combinations: session.combinationIds,
+    combinations:session.combinations,
     notes: session.notes,
     createdAt: session.createdAt,
   }))
@@ -45,7 +45,7 @@ export const createTrainingSession = async (
     date: session.date,
     duration: session.durationMinutes,
     skills: session.skillIds,
-    combinations: session.combinationIds,
+    combinations: session.combinations,
     notes: session.notes,
     createdAt: session.createdAt,
   }

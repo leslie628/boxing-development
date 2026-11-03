@@ -1,3 +1,4 @@
+import { AssessmentBadge } from "../../components/ui/AssessmentBadge";
 import { useCombinations } from "../../hooks/useCombinations";
 import { useSkills } from "../../hooks/useSkills";
 import { useTraining } from "../../hooks/useTraining";
@@ -43,41 +44,55 @@ const TrainingHistory = () => {
                 key={session.id}
                 className="mb-4 rounded-xl border border-slate-700 bg-slate-900/70 p-5"
               >
+                <div className="flex items-center gap-3">
                 <h3 className="font-semibold text-white">{session.date}</h3>
 
-                <span className="rounded-full bg-orange-500/10 px-3 py-1 text-xs text-orange-400">
+                <span className="text-xs text-slate-400">
                   {session.duration} min
                 </span>
+                </div>
 
                 <p className="mt-3 text-sm text-slate-300">
                   Skills: {session.skills.join(", ") || "None"}
                 </p>
 
-                <p className="mt-1 text-sm text-slate-300">
-                  Combinations:{" "}
-                  {session.combinations
-                    .map(
-                      (id) =>
-                        combinations.find(
-                          (combination) => combination.id === id,
-                        )?.name ?? id,
-                    )
-                    .join(", ") || "None"}
-                </p>
-                <p className="mt-1 text-xs text-slate-400">
-                  Sequence:{" "}
-                  {session.combinations.map(
-                    (id) =>
-                      combinations
-                        .find((combination) => combination.id === id)
-                        ?.skillIds.map(
-                          (skillId) =>
-                            skills.find((skill) => skill.id === skillId)
-                              ?.name ?? skillId,
-                        )
-                        .join(" -> ") ?? id,
+                <div className="mt-3">
+                  {session.combinations.length > 0 ? (
+                    session.combinations.map((combination) => {
+                      const item = combinations.find(
+                        (item) => Number(item.id) === combination.id,
+                      );
+
+                      return (
+                        <div
+                          key={combination.id}
+                          className="grid grid-cols-1 sm:grid-cols-[180px_140px_1fr] items-start gap-3 border-b border-slate-800 py-3"
+                        >
+                          <div>
+                            <p className="text-sm text-slate-300">
+                              {item?.name ?? combination.id}
+                            </p>
+
+                            <p className="mt-1 text-xs text-slate-500">
+                              {item?.skillIds
+                                .map(
+                                  (skillId) =>
+                                    skills.find((skill) => skill.id === skillId)
+                                      ?.name ?? skillId,
+                                )
+                                .join(" -> ") ?? ""}
+                            </p>
+                          </div>
+
+                          <AssessmentBadge status={combination.status} />
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <p className="py-3 text-sm text-slate-400">None</p>
                   )}
-                </p>
+                </div>
+
                 {session.notes && (
                   <p className="mt-3 text-sm text-slate-400">{session.notes}</p>
                 )}
