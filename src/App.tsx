@@ -5,6 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import TrainingPage from "./features/training/trainingpage";
 import Skills from "./features/skills/Skills";
 import Combinations from "./features/combinations/Combinations";
+import TrainingHistory from "./features/training/TrainingHistory";
 function PlaceholderPage({ title }: { title: string }) {
   return (
     <main className="p-6 lg:p-10">
@@ -32,6 +33,10 @@ function App() {
         <Route
           path="/training"
           element={<TrainingPage />}
+        />
+        <Route
+          path="/training-history"
+          element={<TrainingHistory />}
         />
         <Route
           path="/development"

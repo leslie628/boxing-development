@@ -5,6 +5,8 @@ import { useSkills } from "../../hooks/useSkills";
 import { useCombinations } from "../../hooks/useCombinations";
 import { useTraining } from "../../hooks/useTraining";
 import AssessmentRadio from "../../components/ui/AssessmentRadio";
+import { History } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 //import {skills} from "../../data/skills";
 type AssessmentStatus = "natural" | "needs-work";
 const initialFormData: TrainingFormData = {
@@ -15,6 +17,7 @@ const initialFormData: TrainingFormData = {
   notes: "",
 };
 const TrainingPage = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<TrainingFormData>({
     ...initialFormData,
   });
@@ -33,11 +36,7 @@ const TrainingPage = () => {
     loading: combinationsLoading,
     error: combinationsError,
   } = useCombinations();
-  const {
-    createTrainingSession,
-    trainingSessions,
-    loading: trainingLoading,
-  } = useTraining();
+  const { createTrainingSession } = useTraining();
 
   const error = skillsError || combinationsError;
   const toggleSelection = (
@@ -88,7 +87,18 @@ const TrainingPage = () => {
   }
   return (
     <main className="min-w-0 w-full space-y-8 p-6 lg:p-10">
-      <div className="grid grid-cols-1 items-start gap-6 xl:grid-cols-2">
+      <div className="mb-6 flex justify-end">
+        <button
+          type="button"
+          onClick={() => navigate("/training-history")}
+          className="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800"
+        >
+          <History size={16} />
+          View History
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 items-start gap-6">
         <section className="space-y-6 rounded-xl border border-slate-800 bg-slate-900 p-6">
           <div className="grid gap-5 sm:grid-cols-2">
             <div>
@@ -229,6 +239,7 @@ const TrainingPage = () => {
               )}
             </div>
           </fieldset>
+          <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
           {formData.skillsPractised.length > 0 && (
             <div className="mt-6">
               <h3 className="mb-3 text-sm font-semibold text-slate-200">
@@ -270,7 +281,7 @@ const TrainingPage = () => {
                 Optional combination assessment
               </h3>
 
-              <div className="smax-h-64 space-y-3 overflow-y-auto pr-2">
+              <div className="max-h-64 space-y-3 overflow-y-auto pr-2">
                 {combinations
                   .filter((combination) =>
                     formData.combinationsPractised.includes(combination.id),
@@ -299,6 +310,7 @@ const TrainingPage = () => {
               </div>
             </div>
           )}
+          </div>
           <div>
             <label
               htmlFor="notes"
@@ -328,67 +340,6 @@ const TrainingPage = () => {
           >
             Save Session
           </button>
-        </section>
-
-        <section className="space-y-4 rounded-xl border border-slate-800 bg-slate-900 p-6">
-          <h2 className="text-xl font-semibold text-white">Training History</h2>
-          {trainingLoading ? (
-            <div className="flex justify-center py-10">
-              <div className="h-8 w-8 animate-spin rounded-full border-4 border-orange-500 border-t-transparent" />
-            </div>
-          ) : trainingSessions.length === 0 ? (
-            <p className="text-slate-400">No training sessions recorded yet.</p>
-          ) : (
-            <div className="h-[calc(100vh-250px)] min-h-0 space-y-3 overflow-y-auto pr-2">
-              {trainingSessions.map((session) => (
-                <article
-                  key={session.id}
-                  className="rounded-xl border border-slate-800 bg-slate-900 p-5"
-                >
-                  <h3 className="font-semibold text-white">{session.date}</h3>
-
-                  <p className="mt-1 text-sm text-slate-400">
-                    Duration: {session.duration} minutes
-                  </p>
-
-                  <p className="mt-3 text-sm text-slate-300">
-                    Skills: {session.skills.join(", ") || "None"}
-                  </p>
-
-                  <p className="mt-1 text-sm text-slate-300">
-                    Combinations:{" "}
-                    {session.combinations
-                      .map(
-                        (id) =>
-                          combinations.find(
-                            (combination) => combination.id === id,
-                          )?.name ?? id,
-                      )
-                      .join(", ") || "None"}
-                  </p>
-                  <p className="mt-1 text-xs text-slate-400">
-                    Sequence:{" "}
-                    {session.combinations.map(
-                      (id) =>
-                        combinations
-                          .find((combination) => combination.id === id)
-                          ?.skillIds.map(
-                            (skillId) =>
-                              skills.find((skill) => skill.id === skillId)
-                                ?.name ?? skillId,
-                          )
-                          .join(" -> ") ?? id,
-                    )}
-                  </p>
-                  {session.notes && (
-                    <p className="mt-3 text-sm text-slate-400">
-                      {session.notes}
-                    </p>
-                  )}
-                </article>
-              ))}
-            </div>
-          )}
         </section>
       </div>
     </main>

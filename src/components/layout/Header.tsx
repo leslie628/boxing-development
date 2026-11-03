@@ -5,6 +5,7 @@ const pageTitles: Record<string, string> = {
   '/skills': 'Skills Library',
   '/combinations': 'Combination Builder',
   '/training': 'Training Log',
+  '/training-history': 'Training History',
   '/development': 'Development Path',
   '/ai-planner': 'AI Training Planner',
 }
