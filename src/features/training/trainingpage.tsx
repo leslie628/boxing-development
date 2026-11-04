@@ -153,7 +153,7 @@ const TrainingPage = () => {
               Skills practised
             </legend>
 
-            <div className="grid max-h-40 grid-cols-1 gap-3 overflow-y-auto sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid max-h-48 grid-cols-1 gap-3 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent sm:grid-cols-2 lg:grid-cols-4 col-span-full border border-slate-700/60 rounded-lg p-5">
               {skillsLoading ? (
                 <div className="col-span-full flex min-h-24 items-center justify-center">
                   <div
@@ -192,7 +192,7 @@ const TrainingPage = () => {
               Combinations practised
             </legend>
 
-            <div className="grid max-h-40 gap-3 overflow-y-auto sm:grid-cols-2">
+            <div className="grid max-h-48 gap-3 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent sm:grid-cols-2 lg:grid-cols-4 col-span-full border border-slate-700/60 rounded-lg p-5">
               {combinationsLoading ? (
                 <div className="col-span-full flex min-h-24 items-center justify-center">
                   <div
@@ -239,7 +239,7 @@ const TrainingPage = () => {
               )}
             </div>
           </fieldset>
-          <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2 scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent">
           {formData.skillsPractised.length > 0 && (
             <div className="mt-6">
               <h3 className="mb-3 text-sm font-semibold text-slate-200">
