@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { useCombinations } from "../../hooks/useCombinations";
 import { useSkills } from "../../hooks/useSkills";
+import { Sparkles, X } from "lucide-react";
+import AISuggestions from "./AISuggestions";
 const Combinations = () => {
   const [name, setName] = useState("");
   const [selectedSkillIds, setSelectedSkillIds] = useState<string[]>([]);
+  const [showAISuggestions, setShowAISuggestions] = useState(false);
   const {
     combinations: combinationData,
     createCombination,
@@ -34,11 +37,21 @@ const Combinations = () => {
   };
   return (
     <main className="mx-auto max-w-screen-2xl space-y-8 p-6 lg:p-10">
-      <section>
+      <section className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
         <h1 className="text-3xl font-bold text-white">Combination Builder</h1>
         <p className="mt-2 text-slate-400">
           Build boxing combinations using skills from your library.
         </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setShowAISuggestions(true)}
+          className="inline-flex items-center justify-center gap-2 rounded-lg border border-purple-500/40 bg-purple-500/10 px-4 py-2.5 text-sm font-medium text-purple-300 transition hover:border-purple-400 hover:bg-purple-500/20"
+        >
+          <Sparkles size={18} />
+          AI Suggestions
+        </button>
       </section>
 
       <section className="max-w-3xl space-y-6 rounded-xl border border-slate-800 bg-slate-900 p-6">
@@ -170,6 +183,20 @@ const Combinations = () => {
           </div>
         )}
       </section>
+      {showAISuggestions && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+          <div className="relative w-full max-w-2xl rounded-xl border border-slate-700 bg-slate-900 p-6 shadow-2xl">
+            <button
+              onClick={() => setShowAISuggestions(false)}
+              className="absolute right-4 top-4 rounded-lg p-2 text-slate-400 transition hover:bg-slate-800 hover:text-white"
+              aria-label="Close AI suggestions"
+            >
+              <X size={20} />
+            </button>
+            <AISuggestions />
+          </div>
+        </div>
+      )}
     </main>
   );
 };

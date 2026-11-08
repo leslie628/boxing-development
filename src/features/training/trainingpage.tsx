@@ -7,6 +7,7 @@ import { useTraining } from "../../hooks/useTraining";
 import AssessmentRadio from "../../components/ui/AssessmentRadio";
 import { History } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import "../../index.css"
 //import {skills} from "../../data/skills";
 type AssessmentStatus = "natural" | "needs-work";
 const initialFormData: TrainingFormData = {
@@ -153,7 +154,7 @@ const TrainingPage = () => {
               Skills practised
             </legend>
 
-            <div className="grid max-h-48 grid-cols-1 gap-3 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent sm:grid-cols-2 lg:grid-cols-4 col-span-full border border-slate-700/60 rounded-lg p-5">
+            <div className="grid max-h-48 grid-cols-1 gap-3 overflow-y-auto thin-scrollbar sm:grid-cols-2 lg:grid-cols-4 col-span-full border border-slate-700/60 rounded-lg p-5">
               {skillsLoading ? (
                 <div className="col-span-full flex min-h-24 items-center justify-center">
                   <div
@@ -192,7 +193,7 @@ const TrainingPage = () => {
               Combinations practised
             </legend>
 
-            <div className="grid max-h-48 gap-3 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent sm:grid-cols-2 lg:grid-cols-4 col-span-full border border-slate-700/60 rounded-lg p-5">
+            <div className="grid max-h-48 gap-3 overflow-y-auto thin-scrollbar sm:grid-cols-2 lg:grid-cols-4 col-span-full border border-slate-700/60 rounded-lg p-5">
               {combinationsLoading ? (
                 <div className="col-span-full flex min-h-24 items-center justify-center">
                   <div
@@ -239,14 +240,14 @@ const TrainingPage = () => {
               )}
             </div>
           </fieldset>
-          <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2 scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent">
+          <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2 ">
           {formData.skillsPractised.length > 0 && (
             <div className="mt-6">
               <h3 className="mb-3 text-sm font-semibold text-slate-200">
                 Optional skill assessment
               </h3>
 
-              <div className="max-h-64 space-y-3 overflow-y-auto pr-2">
+              <div className="max-h-64 space-y-3 thin-scrollbar overflow-y-auto pr-2">
                 {skills
                   .filter((skill) =>
                     formData.skillsPractised.includes(skill.id),
@@ -281,7 +282,7 @@ const TrainingPage = () => {
                 Optional combination assessment
               </h3>
 
-              <div className="max-h-64 space-y-3 overflow-y-auto pr-2">
+              <div className="max-h-64 space-y-3 thin-scrollbar overflow-y-auto pr-2">
                 {combinations
                   .filter((combination) =>
                     formData.combinationsPractised.includes(combination.id),

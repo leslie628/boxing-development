@@ -1,4 +1,5 @@
 
+import type { AICombinationRequest, AICombinations } from '../types/aiCombinations'
 import type { Combination } from '../types/combination'
 import type { CreateCombinationRequest } from '../types/createCombinationRequest'
 
@@ -14,6 +15,20 @@ export const getCombinations = async (): Promise<Combination[]> => {
   return response.json() as Promise<Combination[]>
 }
 
+export const getAISuggestions = async (data: AICombinationRequest): Promise<AICombinations> => {
+  const response = await fetch(`${API_URL}/api/combinations/ai`,{
+     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch AI suggestions.')
+  }
+  return response.json() as Promise<AICombinations>
+}
 export const createCombination = async (data: CreateCombinationRequest): Promise<Combination> => {
   const response = await fetch(`${API_URL}/api/combinations`, {
     method: 'POST',
