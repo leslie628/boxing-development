@@ -1,12 +1,20 @@
 import { useState } from "react";
-import type { AICombinations } from "../../types/aiCombinations";
+import type {
+  AICombinations,
+  AICombinationSuggestion,
+} from "../../types/aiCombinations";
 import { getAISuggestions } from "../../services/combinationService";
 import { Loader2, Sparkles } from "lucide-react";
 
-const AISuggestions = () => {
+type AISuggestionsProps = {
+  onSelectSuggestions: (suggestions: AICombinationSuggestion[]) => void;
+};
+const AISuggestions = ({ onSelectSuggestions }: AISuggestionsProps) => {
   const [scenario, setScenario] = useState("");
   const [result, setResult] = useState<AICombinations | null>(null);
-  const [selectedSuggestions, setSelectedSuggestions] = useState<string[]>([]);
+  const [selectedSuggestions, setSelectedSuggestions] = useState<
+    AICombinationSuggestion[]
+  >([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -33,12 +41,16 @@ const AISuggestions = () => {
     }
   };
 
-  const handleSelectSuggestion = (name: string) => {
-    setSelectedSuggestions((current) =>
-      current.includes(name)
-        ? current.filter((item) => item !== name)
-        : [...current, name],
+  const handleSelectSuggestion = (suggestion: AICombinationSuggestion) => {
+    setSelectedSuggestions((prev) =>
+      prev.some((item) => item.name === suggestion.name)
+        ? prev.filter((item) => item.name !== suggestion.name)
+        : [...prev, suggestion],
     );
+  };
+
+  const saveSuggestions = () => {
+    onSelectSuggestions(selectedSuggestions);
   };
 
   return (
@@ -93,6 +105,14 @@ const AISuggestions = () => {
               </>
             )}
           </button>
+          <button
+            type="button"
+            onClick={saveSuggestions}
+            disabled={selectedSuggestions.length === 0}
+            className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+           Save Selected Suggestions ({selectedSuggestions.length})
+          </button>
           {error && <p className="text-sm text-red-400">{error}</p>}
         </div>
         {result && (
@@ -111,13 +131,15 @@ const AISuggestions = () => {
             ))}
 
             {result.suggestions.map((suggestion, index) => {
-              const isSelected = selectedSuggestions.includes(suggestion.name);
+              const isSelected = selectedSuggestions.some(
+                (selected) => selected.name === suggestion.name,
+              );
 
               return (
                 <button
                   key={`${suggestion.name}-${index}`}
                   type="button"
-                  onClick={() => handleSelectSuggestion(suggestion.name)}
+                  onClick={() => handleSelectSuggestion(suggestion)}
                   className={`w-full rounded-lg border p-4 text-left transition ${
                     isSelected
                       ? "border-purple-500 bg-purple-500/10"

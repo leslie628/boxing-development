@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCombinations } from "../../hooks/useCombinations";
 import { useSkills } from "../../hooks/useSkills";
 import { Sparkles, X } from "lucide-react";
 import AISuggestions from "./AISuggestions";
+import type { AICombinationSuggestion } from "../../types/aiCombinations";
 const Combinations = () => {
   const [name, setName] = useState("");
   const [selectedSkillIds, setSelectedSkillIds] = useState<string[]>([]);
@@ -51,6 +52,20 @@ const Combinations = () => {
       console.error("Error saving combination:", error);
     }
   };
+
+  const handleSelectedSuggestions = async (
+    selectedSuggestions: AICombinationSuggestion[],
+  ) => {
+    selectedSuggestions.map(({ name, skillIds }) => {
+      setName(name);
+      setSelectedSkillIds(skillIds);
+    });
+  };
+
+  useEffect(() => {
+    saveCombination();
+    setShowAISuggestions(false);
+  }, [name, selectedSkillIds]);
   return (
     <main className="mx-auto max-w-screen-2xl space-y-8 p-6 lg:p-10">
       <section className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -216,7 +231,7 @@ const Combinations = () => {
             >
               <X size={20} />
             </button>
-            <AISuggestions />
+            <AISuggestions onSelectSuggestions={handleSelectedSuggestions} />
           </div>
         </div>
       )}
