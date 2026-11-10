@@ -48,6 +48,7 @@ const Combinations = () => {
       });
       setName("");
       setSelectedSkillIds([]);
+      setShowAISuggestions(false);
     } catch (error) {
       console.error("Error saving combination:", error);
     }
@@ -64,7 +65,6 @@ const Combinations = () => {
 
   useEffect(() => {
     saveCombination();
-    setShowAISuggestions(false);
   }, [name, selectedSkillIds]);
   return (
     <main className="mx-auto max-w-screen-2xl space-y-8 p-6 lg:p-10">
