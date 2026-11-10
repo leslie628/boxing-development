@@ -53,19 +53,28 @@ const Combinations = () => {
       console.error("Error saving combination:", error);
     }
   };
+  const saveAISuggestion = async (
+    selectedSuggestions: AICombinationSuggestion[],
+  ) => {
+    try {
+      for (const suggestion of selectedSuggestions) {
+        await createCombination({
+          name: suggestion.name,
+          skillIds: suggestion.skillIds,
+        });
+      }
 
+      setShowAISuggestions(false);
+    } catch (error) {
+      console.error("Error saving AI suggestion:", error);
+    }
+  };
   const handleSelectedSuggestions = async (
     selectedSuggestions: AICombinationSuggestion[],
   ) => {
-    selectedSuggestions.map(({ name, skillIds }) => {
-      setName(name);
-      setSelectedSkillIds(skillIds);
-    });
+    saveAISuggestion(selectedSuggestions);
   };
 
-  useEffect(() => {
-    saveCombination();
-  }, [name, selectedSkillIds]);
   return (
     <main className="mx-auto max-w-screen-2xl space-y-8 p-6 lg:p-10">
       <section className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
