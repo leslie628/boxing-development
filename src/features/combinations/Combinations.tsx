@@ -7,9 +7,15 @@ const Combinations = () => {
   const [name, setName] = useState("");
   const [selectedSkillIds, setSelectedSkillIds] = useState<string[]>([]);
   const [showAISuggestions, setShowAISuggestions] = useState(false);
+  const [combinationToDelete, setCombinationToDelete] = useState<string | null>(
+    null,
+  );
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [deleteSuccess, setDeleteSuccess] = useState(false);
   const {
     combinations: combinationData,
     createCombination,
+    deleteCombinationById,
     loading: combinationLoading,
   } = useCombinations();
   const { skills } = useSkills();
@@ -19,6 +25,16 @@ const Combinations = () => {
   };
   const removeSkill = (index: number) => {
     setSelectedSkillIds((current) => current.filter((_, i) => i !== index));
+  };
+  const handleDeleteCombination = async (id: string) => {
+    try {
+      await deleteCombinationById(id);
+      setDeleteSuccess(true);
+    } catch (error) {
+      setDeleteError(
+        error instanceof Error ? error.message : "Something went wrong.",
+      );
+    }
   };
   const saveCombination = async () => {
     if (!name.trim() || selectedSkillIds.length === 0) {
@@ -39,10 +55,10 @@ const Combinations = () => {
     <main className="mx-auto max-w-screen-2xl space-y-8 p-6 lg:p-10">
       <section className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-        <h1 className="text-3xl font-bold text-white">Combination Builder</h1>
-        <p className="mt-2 text-slate-400">
-          Build boxing combinations using skills from your library.
-        </p>
+          <h1 className="text-3xl font-bold text-white">Combination Builder</h1>
+          <p className="mt-2 text-slate-400">
+            Build boxing combinations using skills from your library.
+          </p>
         </div>
         <button
           type="button"
@@ -168,6 +184,13 @@ const Combinations = () => {
                         : "Needs work"}
                     </span>
                   )}
+                  <button
+                    type="button"
+                    onClick={() => setCombinationToDelete(combination.id)}
+                    className="ml-auto rounded-lg border border-red-500/30 px-3 py-1.5 text-xs font-medium text-red-400 transition hover:bg-red-500/10"
+                  >
+                    Delete
+                  </button>
                 </div>
                 <p className="mt-2 text-sm text-slate-400">
                   {combination.skillIds
@@ -194,6 +217,101 @@ const Combinations = () => {
               <X size={20} />
             </button>
             <AISuggestions />
+          </div>
+        </div>
+      )}
+
+      {combinationToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+          <div className="w-full max-w-md rounded-xl border border-slate-700 bg-slate-900 p-6 shadow-xl">
+            <h2 className="text-lg font-semibold text-white">
+              Delete combination?
+            </h2>
+
+            <p className="mt-2 text-sm text-slate-400">
+              Are you sure you want to delete this combination? This action
+              cannot be undone.
+            </p>
+
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setCombinationToDelete(null)}
+                className="rounded-lg border border-slate-700 px-4 py-2 text-sm text-slate-300 hover:bg-slate-800"
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                onClick={async () => {
+                  await handleDeleteCombination(combinationToDelete);
+                  setCombinationToDelete(null);
+                }}
+                className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-500"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {deleteError && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 p-4">
+          <div className="w-full max-w-md rounded-xl border border-red-500/30 bg-slate-900 p-6 shadow-xl">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-500/15 text-red-400">
+                !
+              </div>
+
+              <h2 className="text-lg font-semibold text-white">
+                Unable to delete combination
+              </h2>
+            </div>
+
+            <p className="mt-4 text-sm leading-relaxed text-slate-400">
+              {deleteError}
+            </p>
+
+            <div className="mt-6 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setDeleteError(null)}
+                className="rounded-lg bg-slate-700 px-5 py-2 text-sm font-medium text-white transition hover:bg-slate-600"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {deleteSuccess && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 p-4">
+          <div className="w-full max-w-md rounded-xl border border-green-500/30 bg-slate-900 p-6 shadow-xl">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-500/15 text-green-400">
+                ✓
+              </div>
+
+              <h2 className="text-lg font-semibold text-white">
+                Combination deleted
+              </h2>
+            </div>
+
+            <p className="mt-4 text-sm text-slate-400">
+              The combination has been successfully deleted.
+            </p>
+
+            <div className="mt-6 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setDeleteSuccess(false)}
+                className="rounded-lg bg-slate-700 px-5 py-2 text-sm font-medium text-white transition hover:bg-slate-600"
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}

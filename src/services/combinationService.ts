@@ -46,6 +46,23 @@ export const createCombination = async (data: CreateCombinationRequest): Promise
   return response.json() as Promise<Combination>
 }
 
+export const deleteCombination = async (id:string): Promise<Combination> => {
+  const response = await fetch(`${API_URL}/api/combinations/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => null)
+    throw new Error(errorData?.message ?? 'Failed to delete combination.')
+  }
+
+  return response.json() as Promise<Combination>
+}
+
+
 export const updateCombinationStatus = async (combinationId: string, status: 'natural' | 'needs-work'): Promise<Combination> => {
   const response = await fetch(`${API_URL}/api/combinations/${encodeURIComponent(combinationId)}/status`, {
     method: 'PATCH',

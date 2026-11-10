@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   getCombinations,
   createCombination as createCombinationApi,
+  deleteCombination
 } from "../services/combinationService";
 import type { Combination } from "../types/combination";
 import type { CreateCombinationRequest } from "../types/createCombinationRequest";
@@ -40,6 +41,18 @@ export const useCombinations = () => {
       throw error;
     }
   };
+  const deleteCombinationById=async (id:string)=>{
+    try{
+      const result=await deleteCombination(id);
+      return result;
+    }
+    catch(error){
+setError(
+        error instanceof Error ? error.message : "Failed to delete combination",
+      );
+      throw error;
+    }
+  }
 
-  return { combinations, createCombination, error, loading };
+  return { combinations, createCombination, deleteCombinationById, error, loading };
 };
