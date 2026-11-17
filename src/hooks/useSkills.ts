@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { getSkills } from "../services/skillService";
+import { getSkills, createSkill } from "../services/skillService";
 import type { Skill } from "../types/skill";
+import type { CreateSkillRequest } from "../types/createSkillRequest";
 
 export const useSkills = () => {
   const [skills, setSkills] = useState<Skill[]>([]);
@@ -23,5 +24,16 @@ export const useSkills = () => {
     void fetchSkills();
   }, []);
 
-  return { skills, error, loading };
+  const createNewSkill = async (skill: CreateSkillRequest) => {
+    try {
+      await createSkill(skill);
+    } catch (error) {
+      console.error("Error creating skills:", error);
+      setError("Failed to create skills.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { skills, createNewSkill, error, loading };
 };

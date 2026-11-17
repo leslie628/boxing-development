@@ -1,9 +1,11 @@
+import type { CreateSkillRequest } from '../types/createSkillRequest'
 import type { Skill } from '../types/skill'
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
+const skillUrl=`${API_URL}/api/skills`;
 
 export const getSkills = async (): Promise<Skill[]> => {
-  const response = await fetch(`${API_URL}/api/skills`)
+  const response = await fetch(skillUrl)
   if (!response.ok) {
     throw new Error('Failed to fetch Skills.')
   }
@@ -16,7 +18,7 @@ export async function updateSkillStatus(
   status: 'natural' | 'needs-work' | null,
 ): Promise<Skill> {
   const response = await fetch(
-    `${API_URL}/api/skills/${encodeURIComponent(id)}/status`,
+    `${skillUrl}/${encodeURIComponent(id)}/status`,
     {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -30,3 +32,24 @@ export async function updateSkillStatus(
 
   return response.json()
 }
+
+export const createSkill = async (
+  skill: CreateSkillRequest,
+): Promise<Skill> => {
+  const response = await fetch(`${skillUrl}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(skill),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to create skill.");
+  }
+
+  return data;
+};
+

@@ -3,7 +3,11 @@ import type { Skill } from "../../types/skill";
 import { useSkills } from "../../hooks/useSkills";
 const Skills = () => {
   const [search, setSearch] = useState("");
-  const { skills, loading: skillsLoading } = useSkills();
+  const { skills, loading: skillsLoading, createNewSkill } = useSkills();
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("");
 
   const filteredSkills = skills.filter((skill: Skill) =>
     `${skill.name} ${skill.category}`
@@ -13,6 +17,28 @@ const Skills = () => {
   const categories = [
     ...new Set(filteredSkills.map((skill: Skill) => skill.category)),
   ];
+  const handleCreateSkill = async () => {
+    try {
+      await createNewSkill({
+        name: name,
+        description: description,
+        category: category,
+      });
+      setShowCreateModal(false);
+      setName("");
+      setDescription("");
+      setCategory("");
+    } catch (error) {
+      console.error("Error saving skill:", error);
+    }
+  };
+  const disableSkillCreate = () => {
+    if (!name.trim() || !description.trim() || !category) {
+      return true;
+    } else {
+      return false;
+    }
+  };
   return (
     <main className="mx-auto max-w-screen-2xl space-y-8 p-6 lg:p-10">
       <section>
@@ -31,17 +57,25 @@ const Skills = () => {
         </div>
       ) : (
         <section className="space-y-6">
-          <div className="relative max-w-xl">
-            <input
-              type="search"
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search skills..."
-              aria-label="Search skills"
-              className="w-full rounded-lg border border-slate-700 bg-slate-900 py-3 pl-4 pr-4 text-white placeholder:text-slate-500 focus:border-blue-500 focus:outline-none"
-            />
+          <div className="flex w-full items-center justify-between gap-4">
+            <div className="relative max-w-xl flex-1">
+              <input
+                type="search"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Search skills..."
+                aria-label="Search skills"
+                className="w-full rounded-lg border border-slate-700 bg-slate-900 py-3 pl-4 pr-4 text-white placeholder:text-slate-500 focus:border-blue-500 focus:outline-none"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowCreateModal(true)}
+              className="shrink-0 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+            >
+              + Create Skill
+            </button>
           </div>
-
           {categories.length === 0 && (
             <p className="py-8 text-center text-slate-400">
               No skills found. Try another search.
@@ -102,6 +136,78 @@ const Skills = () => {
             );
           })}
         </section>
+      )}
+      {showCreateModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+          <div className="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl dark:bg-gray-900">
+            <h2 className="mb-6 text-xl font-semibold">Create New Skill</h2>
+
+            <div className="space-y-4">
+              <div>
+                <label className="mb-1 block text-sm font-medium">
+                  Skill Name
+                </label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="e.g. Jab"
+                  className="w-full rounded-lg border border-gray-300 bg-transparent p-3 outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium">
+                  Description
+                </label>
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Describe the boxing technique..."
+                  rows={3}
+                  className="w-full rounded-lg border border-gray-300 bg-transparent p-3 outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium">
+                  Category
+                </label>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 bg-black p-3 outline-none focus:border-blue-500"
+                >
+                  <option value="">Select category</option>
+                  <option value="Punches">Punches</option>
+                  <option value="Defence">Defence</option>
+                  <option value="Footwork">Footwork</option>
+                  <option value="Movement">Movement</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setShowCreateModal(false)}
+                className="rounded-lg border border-gray-300 px-4 py-2"
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                onClick={handleCreateSkill}
+                disabled={disableSkillCreate()}
+                className="rounded-lg bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700
+                disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Create Skill
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </main>
   );
