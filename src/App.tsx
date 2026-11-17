@@ -6,6 +6,8 @@ import TrainingPage from "./features/training/trainingpage";
 import Skills from "./features/skills/Skills";
 import Combinations from "./features/combinations/Combinations";
 import TrainingHistory from "./features/training/TrainingHistory";
+import { Analytics } from "@vercel/analytics/react";
+
 function PlaceholderPage({ title }: { title: string }) {
   return (
     <main className="p-6 lg:p-10">
@@ -18,26 +20,11 @@ function App() {
   return (
     <AppLayout>
       <Routes>
-        <Route
-          path="/"
-          element={<Dashboard />}
-        />
-        <Route
-          path="/skills"
-          element={<Skills />}
-        />
-        <Route
-          path="/combinations"
-          element={<Combinations />}
-        />
-        <Route
-          path="/training"
-          element={<TrainingPage />}
-        />
-        <Route
-          path="/training-history"
-          element={<TrainingHistory />}
-        />
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/skills" element={<Skills />} />
+        <Route path="/combinations" element={<Combinations />} />
+        <Route path="/training" element={<TrainingPage />} />
+        <Route path="/training-history" element={<TrainingHistory />} />
         <Route
           path="/development"
           element={<PlaceholderPage title="Development Path" />}
@@ -48,6 +35,8 @@ function App() {
         />
         <Route path="*" element={<PlaceholderPage title="Page not found" />} />
       </Routes>
+
+      <Analytics />
     </AppLayout>
   );
 }
