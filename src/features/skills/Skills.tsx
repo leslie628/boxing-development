@@ -57,7 +57,7 @@ const Skills = () => {
         </div>
       ) : (
         <section className="space-y-6">
-          <div className="flex w-full items-center justify-between gap-4">
+          <div className="flex w-full items-center  gap-4">
             <div className="relative max-w-xl flex-1">
               <input
                 type="search"
